@@ -1,0 +1,7 @@
+#http://blog.evanweaver.com/2007/08/15/svn-branching-best-practices-in-practice/
+#http://docs.codehaus.org/display/HAUSMATES/How+to+Tag+and+Branch+a+Subversion+Repository
+#svn info http://gsword.googlecode.com/svn/trunk/
+#svn copy -m"tag for grails 1.37"  https://gsword.googlecode.com/svn/trunk https://gsword.googlecode.com/svn/tags/grails_1_37 
+svn copy -m"tag for grails 1.37"  https://gsword.googlecode.com/svn/trunk https://gsword.googlecode.com/svn/tags/grails_1_37 
+svn copy -m"branch for grails 1.37"  https://gsword.googlecode.com/svn/trunk https://gsword.googlecode.com/svn/branches/grails_1_37
+svn copy -m"branch for grails 2.0"  https://gsword.googlecode.com/svn/trunk https://gsword.googlecode.com/svn/branches/grails_2_0
