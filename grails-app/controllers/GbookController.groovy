@@ -940,7 +940,7 @@ println ("exception total get ${version} ${key}	")
   }
 
   def searchBible = {
-
+	params.bible=	languageService.therightbible(params.bible,params.key)
     Book bible = Books.installed().getBook(params.bible)
  //   println "in search Bible :key:"+  params.key +" bible:"+params.bible
     def ref = jswordService.search(params.bible, params.key)
@@ -1130,17 +1130,20 @@ println ("exception total get ${version} ${key}	")
    }
   def sendmail = {
     // println params.name+  " "+params.email+" "+params.comment
+    def msg= "Your message has been send. Thanks For Contacting Us. Have a blessed day!"
     try {
-      sendMail {
+if(params.comment) sendMail {
         to "yiguang.hu@gmail.com"
         from params.email
         subject "Comment on GSword"
         body " From " + params.name + "\n" + params.comment
       }
     } catch (Exception e) {
-      //  e.printStackTrace()
+	println "failed email comment "+params.comment+" from:"+params.email
+	msg="Sorry email failed. Please try again!"
+        e.printStackTrace()
     }
-    render "Thanks For Contacting Us"
+    render msg
   }
   public static final dailyschedule = new HashMap()
   private static final URL scheduletxt = ResourceUtil.getResource("daily.txt");
@@ -1378,7 +1381,7 @@ private String readStyledText(String bookInitials, String reference, int start, 
     }catch (Exception e){
     mainbook = "KJV";
     }
-	println "here1: "+mainbook +" bookInitials:"+bookInitials+" ref:"+reference;
+	//println "here1: "+mainbook +" bookInitials:"+bookInitials//+" ref:"+reference;
     Book book = jswordService.getBook(mainbook);
     SAXEventProvider osissep 
     try{
@@ -1390,7 +1393,7 @@ private String readStyledText(String bookInitials, String reference, int start, 
       return ""; //$NON-NLS-1$
     }
 
-	println "here2"
+//	println "here2"
     //  println "use new style....." +xslurl.getPath()
     TransformingSAXEventProvider htmlsep = new TransformingSAXEventProvider(NetUtil.toURI(xslurl), osissep); //Customize xslt
     //  doStrongs(false)
@@ -1423,7 +1426,7 @@ private String readStyledText(String bookInitials, String reference, int start, 
     }
     htmlsep.setParameter("VLine", session.state_vline)
 
-	println "here3"
+	//println "here3"
     //Converter styler = ConverterFactory.getConverter();
     // TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) styler.convert(osissep);
 
@@ -1432,8 +1435,6 @@ private String readStyledText(String bookInitials, String reference, int start, 
     boolean direction = bmd.isLeftToRight();
     htmlsep.setParameter("direction", direction ? "ltr" : "rtl"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	println "here4"
-	println "here5"
     // Finally you can get the styled text.
     return XMLUtil.writeToString(htmlsep);
   }
@@ -1745,7 +1746,29 @@ println "in readstyledtext:"+bookInitials+" "+key
       }
        render(view: 'feed', model: [meditates: feedService.getGswordnow(),membibles:feedService.getMembiblenow(id)])
     }
+def advsearch(){
+	def helptxt=g.render(template: "advsearch")
+	def data=new HashMap();
+	data.put("data",helptxt)
+	render data as JSON
+}
+def fetchHelp(){
+	def helptxt=g.render(template: "help")
+	def data=new HashMap();
+	data.put("data",helptxt)
+	render data as JSON
+}
+def about(){
+}
+def fetchCommentForm(){
+//def myTemplateString = g.render(template: "test", model: [foo: bar])
+def cmntform= g.render(template: "contact")
+    def data=new HashMap();
+	data.put("data",cmntform)
 
+
+	render data as JSON
+}
 }
 
 

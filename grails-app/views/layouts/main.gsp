@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title><g:layoutTitle default="Grails" /></title>
+    <title><g:layoutTitle default="GSword" /></title>
     <link type="text/css" href="/gsword/jm/menu.css" rel="stylesheet" />
     <link type="text/css" href="/gsword/css/pagination.css" rel="stylesheet" />
     <link type="text/css" href="/gsword/css/iBD.css" rel="stylesheet" />
@@ -50,7 +50,7 @@ div#copyright a:hover { color:#124a6f; }
                     </div> 
             </li> 
         
-        <li><a href="#" class="parent"><span>
+        <!--li><a href="#" class="parent"><span>
                    <g:message code="translate"/> 
 </span></a>
                     <div> 
@@ -58,7 +58,7 @@ div#copyright a:hover { color:#124a6f; }
 <li><a href="/gsword/translate"><span><g:message code="translate"/></span></a> </li> 
                         </ul> 
                     </div> 
-            </li> 
+            </li--> 
             <li class="parent"> 
                 <a href="#"> 
 <span> 
@@ -77,7 +77,8 @@ div#copyright a:hover { color:#124a6f; }
  
             </li> 
         
-<li><a href="/gsword/gbook/v"><span><g:message code="gsword"/></span></a> </li> 
+<!--li><a href="/gsword/gbook/v"><span><g:message code="gsword"/></span></a> </li--> 
+<li><a href="/gsword/gbook/about"><span><g:message code="about"/></span></a> </li> 
 <li><a href="http://bible.ccim.org"><span><g:message code="oldtool"/></span></a> </li> 
             <li class="parent"> 
  
@@ -101,6 +102,10 @@ div#copyright a:hover { color:#124a6f; }
       <r:layoutResources/>
     </div>
 
+    <div style="padding: 0px 00px">
+	<button onclick="takenote();">Take Notes</button><br/>
+	<div id="noteform" name="noteform></div>
+    </div>
 <div id="copyright"><a href="http://apycom.com/"></a></div>
 <!--div id="copyright">Copyright &copy; 2010 <a href="http://apycom.com/">Apycom jQuery Menus</a></div-->
 <script type="text/javascript">

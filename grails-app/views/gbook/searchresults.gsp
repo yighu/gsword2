@@ -40,6 +40,19 @@ function removeBooks(selected){
                 selectedbooks.splice(index,1);
         }
 }
+function flipBooks(selected){
+        var index=selectedbooks.indexOf(selected);
+        var len=selectedbooks.length;
+        if (index==-1&&len<4){
+                selectedbooks.push(selected);
+        }else{
+                selectedbooks.splice(index,1);
+	}
+}
+function flip_parallel(){
+        flipBooks(getParallel());
+        locate();
+        }
 function pick_parallel(){
         addBooks(getParallel());
         locate();
@@ -97,6 +110,13 @@ function locate(){
   function setInfo(msg){
   $('info').innerHTML=msg;
   }
+  function updateAuxForm(e){
+         var result=eval( e.responseJSON  )
+      if(result.data){
+      $('auxform').innerHTML=result.data;
+   showLayer('closeaux') ;
+      }
+}
   function updateForm(e){
          var result=eval( e.responseJSON  )
       if(result.data){
@@ -268,7 +288,7 @@ function updateReference(data){
 function searchDictionary(){
     var dic=$('dictionaries')        ;
     var key=$('keyword')              ;
-    ${remoteFunction(
+if(key!=null) ${remoteFunction(
             controller: 'gbook',
             action: 'searchDictionary',
 
@@ -312,6 +332,17 @@ function twitter(data){
    function getPassage(){
    return $('reference').value               ;
    }
+function flip_commentary()
+{
+  var dict=  $('commentaries').value;
+  var ref  = getPassage();
+  if (dict&& ref)
+  {
+        flipBooks(dict);
+locate();
+      
+  }
+}
 function pick_commentary()
 {
   var dict=  $('commentaries').value;
@@ -382,8 +413,7 @@ locate();
      }
         
        $('keyword').value=key;
-       Modalbox.hide();
-       return false;
+	searchBible();
    }
 
 function sendmail(){
@@ -395,7 +425,6 @@ function sendmail(){
              action: 'sendmail',
              params: '\'name=\' + escape(name.value)+\'&email=\'+escape(email.value)+\'&comment=\'+escape(comment.value)',
              onComplete: 'displaymailsendresponse(e)')};
-       Modalbox.hide();
        return false;
    }
 function displaymailsendresponse(e){
@@ -498,12 +527,15 @@ function showProtocolData(e){
     return false;
 }
 function showBox(e){
-     $('display_dict').innerHTML="<b>Click to close the dictionary</b><br/>"+e;
+if(e!=null) $('display_dict').innerHTML="<b>Click to close the dictionary</b><br/>"+e;
 return false;
 }
 function offBox(){
-	
      $('display_dict').innerHTML="";
+}
+function offAuxform(){
+     $('auxform').innerHTML="";
+   hideLayer('closeaux') ;
 }
 function changeLocale(){
     
@@ -530,6 +562,33 @@ function changeLocale(){
         document.getElementById(divName).style.display = "none";
         document.getElementById(divName).style.visibility = 'hidden';
     }
+var helptxt;
+var commentform;
+function showhelp(){
+    if (helptxt) $('liveform').innerHTML=helptxt;
+    else ${remoteFunction(
+             controller: 'gbook',
+             action: 'fetchHelp',
+             onComplete: 'updateAuxForm(e)')};
+      }
+function showcomment(){
+      var fom=$('liveform');
+    if (commentform) $('liveform').innerHTML=commentform;
+    else ${remoteFunction(
+             controller: 'gbook',
+             action: 'fetchCommentForm',
+             onComplete: 'updateAuxForm(e)')};
+      }
+	
+function showadvsearch(){
+      var fom=$('liveform');
+    if (commentform) $('liveform').innerHTML=commentform;
+    else ${remoteFunction(
+             controller: 'gbook',
+             action: 'advsearch',
+             onComplete: 'updateAuxForm(e)')};
+      }
+	
   </g:javascript>
   <meta name="layout" content="main"/>
 

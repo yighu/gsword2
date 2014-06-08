@@ -1,6 +1,12 @@
 class UrlMappings {
     static mappings = {
-
+   "/"
+	{
+                    controller = "gbook"
+                    action = "v"
+			constraints{
+			}
+	}
   "/bible/readgen/$book?/$chapter?/$verse?"
                 {
                     controller = "bible"

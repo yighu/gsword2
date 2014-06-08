@@ -913,7 +913,7 @@ private createSlide(Slide s1ide, String text) {
   private searchByKey(String version, String key,int offset) {
 	println "in search by key:"+version +" key:"+key+" ofset:"+offset
      def ref = jswordService.search(version, key)
-	println "reference from jswordService search:"+ref
+//	println "reference from jswordService search:"+ref
      def text = readStyledText(version, ref, offset, 10)
 	//println "text:"+text
      def total = jswordService.getCardinality(version, ref)

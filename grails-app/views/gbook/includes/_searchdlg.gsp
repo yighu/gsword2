@@ -21,29 +21,19 @@
 <g:message code="searchword" />:
         </td>
 		<td>
-			<input type="text" id="keyword"/>
+			<input type="text" id="keyword" onblur="searchBible();" onchange="searchBible();"/>
 		</td>
-		<td class ="labelright" >
-            <g:message code="searchbible" />:
-		</td>
+		<td  class ="labelright"> <g:message code="bible" />: </td>
 		<td title="Select a Bible before search">
+			
 			<g:select name="books" id="books" class ="books" noSelection='["${version}":"${version}"]'
-			  from="${books}" value="name" optionKey="initials" optionValue="name" onchange="searchBible();"/>
-		</td>
-		<td>
-			<button type="button" id="searchButton" title="Click to Search the Key word in selected Bible" onclick="searchBible();"><g:message code="lookup" /></button>
+			  from="${books}" value="name" optionKey="initials" optionValue="name" onchange="searchBible();"  ontouchend="searchBible();" onclick="searchBible();" />
 		</td>
 
-		<td  class ="labelright">
-            <g:message code="parallelbible" />:
-		</td>
+		<td  class ="labelright"> <g:message code="parallelbible" />: </td>
 		<td title="select a Bible for parallel study">
-			<g:select name="parallels" class = "books" noSelection="['':'']"
+			<g:select name="parallels" class = "books" onchange="flip_parallel();" ontouchend="flip_parallel();" onclick="flip_parallel();" noSelection="['':'']"
                 from="${books}" value="name" optionKey="initials" optionValue="name"/>
-		</td>
-		<td >
-			<button onclick="pick_parallel();" title="Add the selected Bible">&nbsp;+&nbsp;</button>
-			<button onclick="unpick_parallel();" title="Remove the selected Bible">&nbsp;-&nbsp;</button>
 		</td>
 		<td class ='labelright'>
 			<g:message code="choosebook" />: 
@@ -82,40 +72,20 @@
 			<g:message code="verse" />:
 		</td>
 		<td>
-			<input type="text" id="reference" value="${ref}"/>
+			<input type="text" id="reference" value="${ref}" onchange="locate();" onblur="locate();"/>
 		</td>
-		<td title="Click to display verses">
-			<button type="button" id="passageButton" onclick="locate();"><g:message code="displayverse" /></button>
-        </td>
+		<td  class ="labelright"> <g:message code="dictionary" />: </td>
 		<td title="Select a dictionary to search the key word">
 			<g:select name="dictionaries" id="dictionaries"  class ='dictionaries' noSelection="['easton':'Eastons Bible Dictionary']"
-              from="${dictionaries}" value="name" optionKey="initials" optionValue="name" onchange="searchDictionary(); "/>
+              from="${dictionaries}" value="name" optionKey="initials" optionValue="name"  onchange="searchDictionary();" onclick="searchDictionary();" />
 		</td>&nbsp;	  
 
-		<td  class ="labelright" title="Click to Search the Key word in selected Dictionary">
-          %{--<modalbox:createLink controller="gbook" action="diclook" title='Dictionary Lookup' width="800" linkname='DictionaryLookup' />--}%
-
-            <button type="button" id="searchButtondic" onclick="searchDictionary();"><g:message code="lookupdict" /></button>
-
-		</td>
 		<td  class ="labelright">
 			<g:message code="commentaries" />:
 		</td>
 		<td title="Select a commentary">
-			<g:select name="commentaries" id="commentaries" class ='books'  noSelection="['':'']"
-                from="${commentaries}"  value="name" optionKey="initials" optionValue="name"
-				onchange="${remoteFunction(
-		           controller:'gbook',
-		           action:'xindex',
-		           params:'\'type=\' + escape(this.value)',
-		           onComplete:'updateForm(e)')}"/>
-		</td>
-		<td >
-			<button onclick="pick_commentary();" title="Add the selected commentary">&nbsp;+&nbsp;</button>
-			<button onclick="unpick_commentary();" title="Remove the selected commentary">&nbsp;-&nbsp;</button>
-				<!--	a href="javascript:pick_commentary();">+</a>
-					<a href="javascript:unpick_commentary();">-</a -->
-        
+			<g:select onchange="flip_commentary();" ontouchend="flip_commentary();" onclick="flip_commentary();" name="commentaries" id="commentaries" class ='books'  noSelection="['':'']"
+                from="${commentaries}"  value="name" optionKey="initials" optionValue="name" />
 		</td>
         <td   class ="labelright">
             <g:message code="choosechapter" />: 
@@ -163,10 +133,10 @@
             <button type="button" id="showstrongs" onclick="showstrongs();" title="Click to on/off Strong number. Best used with KJV Bible"><g:message code="strongs" /></button>&nbsp;
 
         </td>
-         <td>
+         <!--td>
             <button type="button" id="showmorph" onclick="showmorph();"><g:message code="morphology" /></button>&nbsp;
 
-         </td>
+         </td-->
         <td>
             <button type="button" id="shownotes" onclick="shownotes();" title="Click to on/off notes. Best used with KJV Bible"><g:message code="notes" /></button>&nbsp;
         </td>
@@ -184,16 +154,10 @@
          <td title="Click to generate PowerPoint file">
            <button type="button" id="ppt" onclick="genppt();">PowerPoint</button>&nbsp;
            %{--<button type="button" id="excl" onclick="genexcl();">Excel</button>&nbsp;--}%
-<!--
-             <g:link action="language_change" params="[lang:'zh_CN']" title="click to use Chinese"><g:message code="locale.language.zh" /></g:link>
-             <g:link action="language_change" params="[lang:'en_US']" title="click to use English"><g:message code="locale.language.en" /></g:link>
--->
-           <modalbox:createLink controller="gbook" action="contactus" title='Comments' width="400" linkname='Comments' />
-
+          <td><button onclick="showcomment();"><g:message code="comment" /></button></td>
           </td>
-<!--
-          <td><a href="/gsword"><g:message code="home" /></a></td>
--->
+          <!--td><button onclick="showhelp();"><g:message code="help" /></button></td-->
+          <td><button onclick="showadvsearch();"><g:message code="AdvancedSearch" /></button></td>
 
     </tr>
 
@@ -226,8 +190,17 @@
             <br/>
   </td>
   </tr>
+<tr>
+          <td valign="top" >
+		
+    		<div id="auxform" name="auxform"></div>
+    		<button id="closeaux" name="closeaux" style="display:none" onclick="offAuxform();">Click Me to close</button>
+            <br/>
+  </td>
+  </tr>
   <tr>
     <td id="display" valign="top">
+
 
       <div id="liveform">
 

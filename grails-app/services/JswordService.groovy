@@ -11,6 +11,7 @@ import groovy.sql.Sql;
 import org.crosswire.jsword.util.ConverterFactory
 import org.crosswire.jsword.versification.BibleInfo
 import org.crosswire.jsword.bridge.BookInstaller
+import org.crosswire.jsword.bridge.BookIndexer
 import org.xml.sax.ContentHandler
 import org.xml.sax.SAXException
 import grails.converters.*
@@ -39,7 +40,7 @@ class JswordService {
    * @return true if searching can be performed
    */
   public boolean isIndexed(String bookInitials) {
-    return isIndexedb(BookInstaller.getInstalledBook(bookInitials));
+    return isIndexedb(getBook(bookInitials));
   }
 
 
@@ -186,7 +187,17 @@ class JswordService {
 
     return data.getSAXEventProvider();
   }
+public void toindexBook(Book book){
+try{
+ def indxer=new BookIndexer(book)
+ if (!indxer.isIndexed()){
+	indxer.createIndex();
+	}
+}catch (Exception e){
+println "index exception "
+}
 
+}
   /**
    * Get a reference list for a search result against a book.
    *
@@ -198,7 +209,16 @@ class JswordService {
   public String search(String bookInitials, String searchRequest) throws BookException {
 	println "in jsword search:"+bookInitials +" req:"+searchRequest
       def rst = ""
-    Book book = BookInstaller.getInstalledBook(bookInitials);
+    Book book = getBook(bookInitials);
+println "do index..."
+	toindexBook(book);
+
+println "done index..."
+	if (isIndexedb(book)){
+		println " book is indexed :"+bookInitials
+	}else{
+		println " book is not indexed :"+bookInitials
+	}
     if (isIndexedb(book) && searchRequest != null) {
 	println "xin jsword search:"+bookInitials +" indexed"
       if (BookCategory.BIBLE.equals(book.getBookCategory())) {
@@ -210,7 +230,9 @@ class JswordService {
 	println "exception in jsword search:"+bookInitials +" req:"+searchRequest
       }
       return rst
-    }
+    }else{
+	println "Warning Book ${bookInitials} not installed"
+	}
     return ""; //$NON-NLS-1$
   }
 
@@ -219,7 +241,7 @@ class JswordService {
    * keys that are numeric or contain numbers. (unless the numbers are 0 filled.)
    */
   public String[] match(String bookInitials, String searchRequest, int maxMatchCount) {
-    Book book = BookInstaller.getInstalledBook(bookInitials);
+    Book book = getBook(bookInitials);
     if (book == null || searchRequest == null || maxMatchCount < 1) {
       return new String[0];
     }
@@ -296,13 +318,14 @@ class JswordService {
    */
   private SAXEventProvider getOSISProvider(String bookInitials, String reference, int start, int count) throws BookException, NoSuchKeyException {
 	if (!reference)reference="John 3:16"
+	bookInitials=bookInitials.replaceAll(",,",",")
     BookData data = getBookData(bookInitials, reference, start, count);
     SAXEventProvider provider = null;
     if (data != null) {
 	try{
       provider = data?.getSAXEventProvider();
 	}catch (Exception e){
-	println "JSwordService line 244 exception:bini="+bookInitials+" ref:"+reference+" start:"+start+" count:"+count;
+	println "JSwordService line 244 exception:bini="+bookInitials//+" ref:"+reference+" start:"+start+" count:"+count;
 	e.printStackTrace()
 	}
     }
@@ -341,7 +364,7 @@ class JswordService {
 	if (!reference)reference="John 3:15"
 	if (reference.contains("KJV"))reference=reference.replace("KJV","Gen")
       if(reference?.startsWith("1 ")||reference?.startsWith("2 ")|| reference?.startsWith("3 ")) reference=reference.replace(" ","")
-    Book book = BookInstaller.getInstalledBook(bookInitials);
+    Book book = getBook(bookInitials);
     if (book != null) {
       Key key = book.getKey(reference);
       rst=key?.getCardinality();
@@ -385,7 +408,7 @@ class JswordService {
     } else {
       Book[] books = new Book[len];
       for (int i = 0; i < len; i++) {
-        books[i] = BookInstaller.getInstalledBook(bookInitials[i]);
+        books[i] = getBook(bookInitials[i]);
       }
       Key key 
 	try{
@@ -403,7 +426,7 @@ class JswordService {
   }
 
    private BookData getBookData(String bookstring, Key key) throws NoSuchKeyException {
-          Book book = BookInstaller.getInstalledBook(bookstring);
+          Book book = getBook(bookstring);
             return new BookData(book, key);
     }
 
@@ -442,7 +465,7 @@ class JswordService {
   }
 
   def listkey(String bookInitial,String query)  {
-     Book book = BookInstaller.getInstalledBook(bookInitial);
+     Book book = getBook(bookInitial);
    /*  Key key =book.getKey(query+"~");
         println " query "+query
        key.each {k->

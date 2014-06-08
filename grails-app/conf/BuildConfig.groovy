@@ -57,6 +57,7 @@ grails.project.dependency.resolution = {
 
         // plugins for the compile step
         compile ":scaffolding:2.0.0"
+        compile ":mail:1.0.5"
         compile ':cache:1.1.1'
         compile ':cometd:0.2.2'
 	compile ":grooscript-vertx:0.4"
