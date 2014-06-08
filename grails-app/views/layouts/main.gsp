@@ -32,7 +32,7 @@ div#copyright a:hover { color:#124a6f; }
 
 <div id="menu"> 
     <ul class="menu">
-                        <li><a href="/gsword"><span><g:message code="home"/></span></a> </li> 
+        <li><a href="/gsword"><span><g:message code="home"/></span></a> </li> 
         <li><a href="#" class="parent"><span>
                    <g:message code="bible"/> 
 </span></a>
@@ -78,6 +78,7 @@ div#copyright a:hover { color:#124a6f; }
             </li> 
         
 <!--li><a href="/gsword/gbook/v"><span><g:message code="gsword"/></span></a> </li--> 
+	<li><a href="javascript:takenote();"> <span><g:message code="takenote"/></span> </a></li>
 <li><a href="/gsword/gbook/about"><span><g:message code="about"/></span></a> </li> 
 <li><a href="http://bible.ccim.org"><span><g:message code="oldtool"/></span></a> </li> 
             <li class="parent"> 
@@ -103,8 +104,14 @@ div#copyright a:hover { color:#124a6f; }
     </div>
 
     <div style="padding: 0px 00px">
-	<button onclick="takenote();">Take Notes</button><br/>
+<br/>
+<br/>
+	<button onclick="takenote();"><span><g:message code="takenote"/></span> </button><br/>
 	<div id="noteform" name="noteform></div>
+<br/>
+<br/>
+<br/>
+<h1>----------------------------------------</h1>
     </div>
 <div id="copyright"><a href="http://apycom.com/"></a></div>
 <!--div id="copyright">Copyright &copy; 2010 <a href="http://apycom.com/">Apycom jQuery Menus</a></div-->

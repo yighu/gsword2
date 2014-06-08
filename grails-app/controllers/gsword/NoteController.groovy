@@ -25,7 +25,7 @@ try{
 	println "email not to email:"+session.biblenote?.email +"\n"+session.biblenote?.note
 if(session.biblenote?.note&&session.biblenote?.email) sendMail {
         to session.biblenote?.email
-        from session.biblenote?.email
+        from "mailman@ccim.org"
         subject session.biblenote?.title
         body session.biblenote?.note +"\n"+ORIGIN
    } } catch (Exception e) {

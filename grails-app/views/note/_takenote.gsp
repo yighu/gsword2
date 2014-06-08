@@ -1,4 +1,4 @@
-  <h3>Write down your thought and email it to your self </h3>
+  <h3><g:message code="notetitle"/></h3>
 <br/>
    <table>
         <tr>
@@ -19,7 +19,7 @@
       <tr>
            <td> Notes</td>
            <td>
-               <g:textArea name="notetxt" rows="25" cols="50" value="${note?.ref}${note?.note}" onblur="keepnote();"/>
+               <g:textArea name="notetxt" rows="25" cols="50" value="${note?.ref?:''}\n\n${note?.note?:''}" onblur="keepnote();"/>
            </td>
        </tr>
 
@@ -33,4 +33,5 @@
           <div id="emailnotestatus"/> 
          </td>
      </tr>
+<tr><td>Note: CCIM do not keep your note and do not share it with any one!</td></tr>
   </table>
