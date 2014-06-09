@@ -1,5 +1,6 @@
   <h3><g:message code="notetitle"/></h3>
 <br/>
+   
    <table>
         <tr>
   <td>Title 
@@ -17,7 +18,7 @@
            </td>
        </tr>
       <tr>
-           <td> Notes</td>
+           <td>Notes</td>
            <td>
                <g:textArea name="notetxt" rows="25" cols="50" value="${note?.ref?:''}\n\n${note?.note?:''}" onblur="keepnote();"/>
            </td>

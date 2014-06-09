@@ -22,7 +22,6 @@
 
 <g:javascript library="application" />
 <r:layoutResources/>
-<modalbox:modalIncludes />
 <g:javascript>
 var selectedbooks=new Array();
 function addBooks(selected){

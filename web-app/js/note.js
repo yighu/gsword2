@@ -29,7 +29,12 @@ var options = {
 }}; 
 new Ajax.Request('/gsword/note/keepnote',options);  
 }
-
+function addreftonote(){
+var reference=$('reference');
+var ref="";
+if(reference)ref=reference.value;
+$('notetxt').value=$('notetxt').value+"\n"+ref;
+}
 
 function sendnotemail(){
 new Ajax.Request('/gsword/note/emailnote', {

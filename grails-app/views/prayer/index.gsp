@@ -15,16 +15,13 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="layout" content="main" />
+  <g:javascript library="prototype"/>
+
 <g:javascript library="application" />
 </head>
 <body>
 
 <div id="prayer_root"> </div>
-<script src="http://connect.facebook.net/en_US/all.js" charset="utf-8">
-</script>
-<script>
-	FB.init({appId:'756163457768156', status:true,cookie:true,xfbml:true});
-</script>
 ${txt}
 <center>
 <table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>

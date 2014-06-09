@@ -154,7 +154,7 @@
          <td title="Click to generate PowerPoint file">
            <button type="button" id="ppt" onclick="genppt();">PowerPoint</button>&nbsp;
            %{--<button type="button" id="excl" onclick="genexcl();">Excel</button>&nbsp;--}%
-          <td><button onclick="showcomment();"><g:message code="comment" /></button></td>
+          <!--td><button onclick="showcomment();"><g:message code="comment" /></button></td-->
           </td>
           <!--td><button onclick="showhelp();"><g:message code="help" /></button></td-->
           <td><button onclick="showadvsearch();"><g:message code="AdvancedSearch" /></button></td>

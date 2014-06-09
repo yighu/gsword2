@@ -61,7 +61,8 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.1'
         compile ':cometd:0.2.2'
 	compile ":grooscript-vertx:0.4"
-runtime ":prototype:1.0"
+	//compile ':geoip:0.3.2'
+	runtime ":prototype:1.0"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.1" // or ":hibernate4:4.1.11.1"

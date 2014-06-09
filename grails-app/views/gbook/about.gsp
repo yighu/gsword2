@@ -8,7 +8,40 @@
     <title><g:message code="welcome" /></title>
   <g:javascript library="prototype"/>
 <g:javascript library="application" />
-<modalbox:modalIncludes />
+<g:javascript>
+
+  function updateAuxForm(e){
+         var result=eval( e.responseJSON  )
+      if(result.data){
+      $('auxform').innerHTML=result.data;
+   showLayer('closeaux') ;
+      }
+}
+function offAuxform(){
+     $('auxform').innerHTML="";
+   hideLayer('closeaux') ;
+}
+   function showLayer(divName) {
+        document.getElementById(divName).style.display = "";
+        document.getElementById(divName).style.visibility = 'visible';
+    }
+
+    function hideLayer(divName) {
+        document.getElementById(divName).style.display = "none";
+        document.getElementById(divName).style.visibility = 'hidden';
+    }
+var commentform;
+function showcomment(){
+      var fom=$('liveform');
+    if (commentform) $('liveform').innerHTML=commentform;
+    else ${remoteFunction(
+             controller: 'gbook',
+             action: 'fetchCommentForm',
+             onComplete: 'updateAuxForm(e)')};
+      }
+</g:javascript>
+
+
 </head>
 
 <body>
@@ -102,7 +135,11 @@ Download Mobile applications:
 <a href="http://www.ccim.org" title="CCIM.ORG">CCIM.ORG</a><br />
 <a href="http://www.ccim.org/n103" target="_blank" title="Support information"><g:message code="donation"/></a>
 </p>
+<button onclick="showcomment();"><g:message code="comment" /></button>
 </div>
+<div id="liveform" name="liveform"/>
+ <div id="auxform" name="auxform"></div>
+                <button id="closeaux" name="closeaux" style="display:none" onclick="offAuxform();">Click Me to close</button>
 </td>
 </tr>
 </table>

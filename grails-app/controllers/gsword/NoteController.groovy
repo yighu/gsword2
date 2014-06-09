@@ -14,20 +14,21 @@ class NoteController {
     def keepnote(){
 	session.biblenote=params
 	def result=new HashMap()
-	def msg="The note is cached"
-	result.put("data",msg)
+	result.put("data","note is cached")
 	render result as JSON	
 	}
     def emailnote(){
 	def ORIGIN="\nGSword Online Bible Studio http://www.ccimweb.org/gsword\n"
-	def msg="The note is emailed successfully"
+	def msg="The note is emailed successfully."
+	def address=request.remoteHost
 try{
-	println "email not to email:"+session.biblenote?.email +"\n"+session.biblenote?.note
+	println "email note to email:"+session.biblenote?.email +"\n from "+address
+	def location=retriveClientinfo()
 if(session.biblenote?.note&&session.biblenote?.email) sendMail {
         to session.biblenote?.email
         from "mailman@ccim.org"
         subject session.biblenote?.title
-        body session.biblenote?.note +"\n"+ORIGIN
+        body session.biblenote?.note +"\n"+ORIGIN +" \n"+address
    } } catch (Exception e) {
 	msg="Sorry email note not successful."
 	e.printStackTrace()
