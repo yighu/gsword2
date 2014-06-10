@@ -23,7 +23,6 @@ class NoteController {
 	def address=request.remoteHost
 try{
 	println "email note to email:"+session.biblenote?.email +"\n from "+address
-	def location=retriveClientinfo()
 if(session.biblenote?.note&&session.biblenote?.email) sendMail {
         to session.biblenote?.email
         from "mailman@ccim.org"
