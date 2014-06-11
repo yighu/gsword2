@@ -30,6 +30,7 @@ import org.apache.poi.hslf.model.TextBox
 import org.apache.poi.hslf.usermodel.RichTextRun
 import org.springframework.web.context.request.RequestContextHolder
 import javax.servlet.http.HttpSession;
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class GbookController {
   private static final String BIBLE_PROTOCOL = "bible";                                     //$NON-NLS-1$
@@ -334,6 +335,44 @@ private convertNonAscii(String s) {
         }
       }
     }
+  }
+private static pray
+  def vp = {
+
+def ix=params.id
+if(!ix)ix="1"
+def config = ConfigurationHolder.config
+if (!pray) pray=new XmlSlurper().parse(new File(config.prayerroot.toString()+"/praybible_zh.xml"))
+def cs=pray.c
+def catlist=pray.c.@z
+def cat= pray.c.findAll{it.@i.text()==ix}
+def version =  "ChiNCVs"
+def prayers=[]
+def limit=200
+def start=0
+cat.each{c->
+ 	def prays=[]
+        c.s.each{s->
+	try{
+		def txt= readStyledText4pray(version, s.@v.text(), start, limit)
+		def prayx=new HashMap()
+		prayx.name=s.@z.text()
+		prayx.v=s.@v.text()
+		prayx.txt=txt
+		prays<<prayx
+	}catch (Exception e){
+	e.printStackTrace()
+	}
+        }
+	def x=[:]
+        x=[name:c.@z.text(),prays:prays]
+        prayers<<x
+
+}
+
+    render(view: 'vp', model: [category:cat.@z.text(),prayers: prayers,catlist:catlist])
+
+
   }
   def v = {
 
@@ -1438,6 +1477,41 @@ private String readStyledText(String bookInitials, String reference, int start, 
     // Finally you can get the styled text.
     return XMLUtil.writeToString(htmlsep);
   }
+def readStyledText4pray(String bookInitials, String reference, int start, int maxKeyCount) throws NoSuchKeyException, BookException, SAXException {
+    def mainbook = "KJV";
+    try{
+    mainbook = bookInitials.split(',')[0];
+    }catch (Exception e){
+    mainbook = "KJV";
+    }
+    Book book = jswordService.getBook(mainbook);
+    SAXEventProvider osissep 
+    try{
+	osissep= jswordService.getOSISProvider(bookInitials, reference, start, maxKeyCount);
+	}catch (Exception e){
+	println ("get osisprovide fail for:"+bookInitials+" ref: "+reference)
+	}
+    if (osissep == null) {
+      return ""; //$NON-NLS-1$
+    }
+
+    TransformingSAXEventProvider htmlsep = new TransformingSAXEventProvider(NetUtil.toURI(xslurl), osissep); //Customize xslt
+    //  doStrongs(false)
+    htmlsep.setParameter(STRONGS_NUMBERS, "fasle")
+    htmlsep.setParameter(NOTES, "false")
+    htmlsep.setParameter(HEADINGS, "false")
+    htmlsep.setParameter(XREF, "false")
+    htmlsep.setParameter("Morph", "false")
+    htmlsep.setParameter("VLine", "true")
+    htmlsep.setParameter("BCVNum", "true")
+    htmlsep.setParameter("fontsize", "40")
+
+    BookMetaData bmd = book.getBookMetaData();
+    boolean direction = bmd.isLeftToRight();
+    htmlsep.setParameter("direction", direction ? "ltr" : "rtl"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    return XMLUtil.writeToString(htmlsep);
+  }
 
 
   private String readStyledText(String bookInitials, Key key) throws NoSuchKeyException, BookException, SAXException {
@@ -1613,51 +1687,6 @@ println "in readstyledtext:"+bookInitials+" "+key
     XSLTProperty.START_VERSE_ON_NEWLINE.setState(toggle);
   }
 
-  private void doVNum() {
-    XSLTProperty.VERSE_NUMBERS.setState(true);
-    XSLTProperty.CV.setState(false);
-    XSLTProperty.BCV.setState(false);
-    XSLTProperty.NO_VERSE_NUMBERS.setState(false);
-  }
-
-  private void doTinyVNum(boolean toggle) {
-    XSLTProperty.TINY_VERSE_NUMBERS.setState(toggle);
-  }
-
-  private void doBCVNum() {
-    XSLTProperty.VERSE_NUMBERS.setState(false);
-    XSLTProperty.CV.setState(false);
-    XSLTProperty.BCV.setState(true);
-    XSLTProperty.NO_VERSE_NUMBERS.setState(false);
-  }
-
-  private void doCVNum() {
-    XSLTProperty.VERSE_NUMBERS.setState(false);
-    XSLTProperty.CV.setState(true);
-    XSLTProperty.BCV.setState(false);
-    XSLTProperty.NO_VERSE_NUMBERS.setState(false);
-  }
-
-  private void doNoVNum() {
-    XSLTProperty.VERSE_NUMBERS.setState(false);
-    XSLTProperty.CV.setState(false);
-    XSLTProperty.BCV.setState(false);
-    XSLTProperty.NO_VERSE_NUMBERS.setState(true);
-  }
-
-  private void doHeadings(boolean toggle) {
-    XSLTProperty.HEADINGS.setState(toggle);
-  }
-
-  private void doNotes(boolean toggle) {
-    XSLTProperty.NOTES.setState(toggle);
-  }
-
-  private void doXRef(boolean toggle) {
-    XSLTProperty.XREF.setState(toggle);
-  }
-
-
   String day() {
     def dt = new Date();
     java.text.DateFormat dateFormat = new SimpleDateFormat("MM.dd")
@@ -1769,6 +1798,58 @@ def cmntform= g.render(template: "contact")
 
 	render data as JSON
 }
+
+def doPrayStyle(){
+   doCVNum() 
+   doHeadings("false") 
+   doNotes("false")
+   doXRef("false") 
+}
+   def doVNum() {
+    XSLTProperty.VERSE_NUMBERS.setState(true);
+    XSLTProperty.CV.setState(false);
+    XSLTProperty.BCV.setState(false);
+    XSLTProperty.NO_VERSE_NUMBERS.setState(false);
+  }
+
+   def doTinyVNum(boolean toggle) {
+    XSLTProperty.TINY_VERSE_NUMBERS.setState(toggle);
+  }
+
+   def doBCVNum() {
+    XSLTProperty.VERSE_NUMBERS.setState(false);
+    XSLTProperty.CV.setState(false);
+    XSLTProperty.BCV.setState(true);
+    XSLTProperty.NO_VERSE_NUMBERS.setState(false);
+  }
+
+   private void doCVNum() {
+println "here"
+    XSLTProperty.VERSE_NUMBERS.setState(true);
+    XSLTProperty.CV.setState(true);
+    XSLTProperty.BCV.setState(true);
+    XSLTProperty.NO_VERSE_NUMBERS.setState("false");
+  }
+
+   def doNoVNum() {
+    XSLTProperty.VERSE_NUMBERS.setState(false);
+    XSLTProperty.CV.setState(false);
+    XSLTProperty.BCV.setState(false);
+    XSLTProperty.NO_VERSE_NUMBERS.setState(true);
+  }
+
+   def doHeadings(boolean toggle) {
+    XSLTProperty.HEADINGS.setState(toggle);
+  }
+
+   def doNotes(boolean toggle) {
+    XSLTProperty.NOTES.setState(toggle);
+  }
+
+   def doXRef(boolean toggle) {
+    XSLTProperty.XREF.setState(toggle);
+  }
+
 }
 
 

@@ -74,6 +74,8 @@ div#copyright a:hover { color:#124a6f; }
 <!--li><a href="/gsword/gbook/feeds"><span><g:message code="meditate"/></span></a> </li--> 
 <li><a href="/gsword/prayer"><span><g:message code="prayer"/></span></a> </li> 
 <li><a href="/gsword/closet/index.htm"><span><g:message code="closet"/></span></a> </li> 
+<li><a href="/gsword/gbook/vp/${Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+}"><span><g:message code="readpray"/></span></a> </li> 
                         </ul> 
                     </div> 
  
