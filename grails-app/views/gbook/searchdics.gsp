@@ -101,7 +101,7 @@ alert(result.data);
      useShadow="false"
   />
 -->
-<g:textField name="key"  />
+<g:textField name="key"  onchange="searchDictionary();"/>
  </td>
  <td>
     <g:message code="selectdic" />
@@ -111,25 +111,21 @@ alert(result.data);
   <g:select name="dic" id="dic" class='dictionaries' noSelection="['easton':'Eastons Bible Dictionary']"
           from="${dictionaries}" value="name" optionKey="initials" optionValue="name" onchange="searchDictionary(); "/>
     </td>
-    <td>
-      <button type="button" id="searchButtondic" onclick="searchDictionary();"><g:message code="lookupdict" /></button>
-      
-    </td>
    </tr>
   </table>
   </g:form>
  <br/>
   <div id="display_dict">
-   <b> ${keyword}</b> <br/><br/>${keyvalue}
+   <b> ${keyword}</b> <br/><br/>${keyvalue?.encodeAsRaw()}
     </div>
 <br/>
       <g:if test="${bookkey}">
         <div style="padding: 10px"><div style="background:#DFDDD1;font-weight: bold; padding:10px">
                   <span class="pgray">
 <div class="paginateButtons">
-  ${dic} 
+  ${dic?.encodeAsRaw()} 
 <span class="pager-list"><strong class="pager-current">
-<g:paginate total="${bookkey.getCardinality()}" controller="gbook" action="searchdics" params='["":"${dic?.trim()}"]' />
+<g:paginate total="${bookkey.getCardinality()}" controller="gbook" action="searchdics" params='["dic":"${dic?.trim()}"]' maxsteps="1" max="1" />
 </strong>
 </span></div>
 

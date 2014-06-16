@@ -622,7 +622,7 @@ alert(result.data);
  </span>
    
               </div></div>
-${txt}
+${txt?.encodeAsRaw()}
 <a href="/gsword" ><g:message code="home" /> |</a>
 
 

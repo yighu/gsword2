@@ -20,7 +20,7 @@
     <tr>
     <td width="600px" valign="top">
 	<div id="genform">
-       ${txt}
+       ${txt?.encodeAsRaw()}
 	</div>
     </td>
     </tr>
@@ -37,7 +37,7 @@
 <tr>
 <td width="100%">
 <hr/>
-     ${toc}
+     ${toc?.encodeAsRaw()}
 </td>
 </tr>  
 </table>

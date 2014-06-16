@@ -22,7 +22,7 @@
 <body>
 
 <div id="prayer_root"> </div>
-${txt}
+${txt?.encodeAsRaw()}
 <center>
 <table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>
   <tr><td>

@@ -12,7 +12,7 @@
 <div class="paginateButtons">Simplified Chinese Keys
 <span class="pager-list"><strong class="pager-current">
 <!--c: spaginate total="${totalkeyc}" controller="bible" action="search" params='["":"ChiUns"]' /-->
-<g:paginate total="3102" controller="bible" action="search" params='["vk":"ChiUns"]' />
+<g:paginate total="3102" controller="bible" action="search" params='["vk":"ChiUns"]'  max="1" maxsteps="1" />
 
 </strong>
 </span></div>

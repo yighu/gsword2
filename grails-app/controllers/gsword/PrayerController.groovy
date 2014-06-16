@@ -1,10 +1,8 @@
 package gsword
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class PrayerController {
-
-def config = ConfigurationHolder.config
+def grailsApplication
 def prayerindex(){
-def file=new File(config.prayerroot.toString() +"/prayerindex.txt")
+def file=new File(grailsApplication.config.prayerroot.toString() +"/prayerindex.txt")
 if(!file.isFile())file.write("0");
 def index=file?.text
 if(!index){
@@ -17,15 +15,15 @@ if(i>92)i=0
 i
 }
 def intro={
-def file=config.prayerroot+"/intro.htm"
+def file=grailsApplication.config.prayerroot+"/intro.htm"
 def txt=new File(file).text?.replaceAll("�","")
-render (view:'index',model:[txt:txt])
+render (view:'index',model:[txt:txt,metadesc:"Pray Scripture His Word Spiritual growth"])
 }
 
 def today={
 
 def i=prayerindex()
-def file=config.prayerroot+"/day${i}.htm"
+def file=grailsApplication.config.prayerroot+"/day${i}.htm"
 render new File(file).text
 }
     def index = {
@@ -35,8 +33,8 @@ try{
 if (!i?.isInteger()) i=prayerindex()
 if(i.toInteger()>93||i.toInteger()<0)i=prayerindex()
 }catch (Exception e){}
-def file=config.prayerroot+"/day${i}.htm"
+def file=grailsApplication.config.prayerroot+"/day${i}.htm"
 def txt=new File(file).text?.replaceAll("�","")
-render (view:'index',model:[txt:txt])
+render (view:'index',model:[txt:txt,metadesc:"Pray Scripture His Word Spiritual Growth"])
  }
 }

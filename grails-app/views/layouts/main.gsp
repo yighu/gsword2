@@ -1,6 +1,7 @@
 <html>
 <head>
     <title><g:layoutTitle default="GSword" /></title>
+    <meta name="description" value="GSword Online Bible Studio Chinese ccim Christian God His Word what does Bible say pray spiritual religion ${metadesc?:''}"/>
     <link type="text/css" href="/gsword/jm/menu.css" rel="stylesheet" />
     <link type="text/css" href="/gsword/css/pagination.css" rel="stylesheet" />
     <link type="text/css" href="/gsword/css/iBD.css" rel="stylesheet" />
@@ -46,7 +47,7 @@ div#copyright a:hover { color:#124a6f; }
                             <li> <a href="/gsword/bible/search"><span><g:message code="searchthebible"/></span></a> </li> 
 <li><a href="/gsword/bible/cmnt"><span><g:message code="commentary"/></span></a> </li> 
 <li><a href="/gsword/gbook/c"><span><g:message code="classics"/></span></a> </li> 
-<li><a href="/gsword/ex/index.gsp"><span><g:message code="general"/></span></a> </li> 
+<li><a href="/gsword/ex"><span><g:message code="general"/></span></a> </li> 
 <li><a href="/gsword/gbook/searchdics"><span><g:message code="dictionarylookup"/></span></a> </li> 
                         </ul> 
                     </div> 
@@ -74,6 +75,7 @@ div#copyright a:hover { color:#124a6f; }
 <!--li><a href="/gsword/gbook/feeds"><span><g:message code="meditate"/></span></a> </li--> 
 <li><a href="/gsword/prayer"><span><g:message code="prayer"/></span></a> </li> 
 <li><a href="/gsword/closet/index.htm"><span><g:message code="closet"/></span></a> </li> 
+<li><a href="/gsword/incloset"><span><g:message code="closet"/></span></a> </li> 
 <li><a href="/gsword/gbook/vp/${Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
 }"><span><g:message code="readpray"/></span></a> </li> 
                         </ul> 

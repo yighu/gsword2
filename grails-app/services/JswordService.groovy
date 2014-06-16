@@ -5,7 +5,6 @@ import org.crosswire.jsword.index.IndexManagerFactory
 import org.crosswire.jsword.passage.Key
 import org.crosswire.jsword.passage.NoSuchKeyException
 import org.crosswire.jsword.passage.Passage
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.crosswire.common.util.Translations;
 import groovy.sql.Sql;
 import org.crosswire.jsword.util.ConverterFactory
@@ -31,7 +30,7 @@ import org.springframework.web.context.request.RequestContextHolder
 class JswordService {
 
   boolean transactional = false
-
+  def grailsApplication
   /**
    * Determine whether the named book can be searched, that is, whether
    * the book is indexed.
@@ -48,11 +47,10 @@ class JswordService {
     line
   }
   def lastid_daily(){
-      def config = ConfigurationHolder.config
     def membibleid
 
     try{
-   membibleid= new File(config.membibleid).text;
+   membibleid= new File(grailsApplication.config.membibleid).text;
     }catch(Exception e){
       membibleid="0"
     }
@@ -62,12 +60,11 @@ class JswordService {
     membibleid;
   }
   def memVersecurrent(String b) {
-    def config = ConfigurationHolder.config
     def membibleid=lastid_daily()
 
     def verse
     try{
-    new File(config.membiblesch).eachLine {line ->
+    new File(grailsApplication.config.membiblesch).eachLine {line ->
       if (membibleid-- == 0) {
         verse= line.split(";")[2]        
       }
@@ -78,7 +75,6 @@ class JswordService {
   }
   def memVersecurrentplusprv(String b,Integer index) {
 //        println "do "+b
-    def config = ConfigurationHolder.config
     def membibleid=index;
     if (membibleid<=0){
     membibleid=Integer.parseInt((lastid_daily()).trim())
@@ -86,7 +82,7 @@ class JswordService {
     def result=new ArrayList()
     def verse
     try{
-    new File(config.membiblesch).eachLine {line ->
+    new File(grailsApplication.config.membiblesch).eachLine {line ->
       if (membibleid>=0 && membibleid-- < 8) {
         verse= line.split(";")[2]
       // println "do "+verse  +" for id "+ membibleid
@@ -113,13 +109,12 @@ class JswordService {
 
 
   def memVerse() {
-    def config = ConfigurationHolder.config
     def membibleid=lastid_daily()
 
     def next = Integer.parseInt(membibleid?.trim()) + 1;
-    new File(config.membibleid).write(""+next) 
+    new File(grailsApplication.config.membibleid).write(""+next) 
     def verse
-    new File(config.membiblesch).eachLine {line ->
+    new File(grailsApplication.config.membiblesch).eachLine {line ->
       if (next-- == 0) {
         verse= line.split(";")[2]        
       }
@@ -191,7 +186,7 @@ public void toindexBook(Book book){
 try{
  def indxer=new BookIndexer(book)
  if (!indxer.isIndexed()){
-	indxer.createIndex();
+	//indxer.createIndex();
 	}
 }catch (Exception e){
 println "index exception "
@@ -211,16 +206,16 @@ println "index exception "
       def rst = ""
     Book book = getBook(bookInitials);
 println "do index..."
-	toindexBook(book);
+	//toindexBook(book);
 
 println "done index..."
 	if (isIndexedb(book)){
 		println " book is indexed :"+bookInitials
 	}else{
-		println " book is not indexed :"+bookInitials
+		//println " book is not indexed :"+bookInitials
 	}
     if (isIndexedb(book) && searchRequest != null) {
-	println "xin jsword search:"+bookInitials +" indexed"
+	//println "xin jsword search:"+bookInitials +" indexed"
       if (BookCategory.BIBLE.equals(book.getBookCategory())) {
         BibleInfo.setFullBookName(false);
       }

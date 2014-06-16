@@ -624,7 +624,7 @@ function showProtocolData(e){
  </span>
    
               </div></div>
-${txt}
+${txt?.encodeAsRaw()}
 <a href="/gsword" ><g:message code="home" /> |</a>
 
 <a href="${createLink(controller:'bible', action:'search')}">Search | </a>

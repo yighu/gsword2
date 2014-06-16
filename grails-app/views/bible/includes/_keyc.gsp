@@ -11,7 +11,7 @@
                   <span class="pgray">
 <div class="paginateButtons">Chinese Keys
 <span class="pager-list"><strong class="pager-current">
-<g:paginate total="${totalkeyc}" controller="bible" action="search" params='["vk":"ChiUn"]' />
+<g:paginate total="${totalkeyc}" controller="bible" action="search" params='["vk":"ChiUn"]' max="1" maxsteps="1" />
 </strong>
 </span></div>
                      

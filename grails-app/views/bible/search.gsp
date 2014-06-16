@@ -591,7 +591,7 @@ alert(result.data);
 </center>
 
   <g:render template="includes/resultbykey"/>
-${txt}
+${txt?.encodeAsRaw()}
 
 
 

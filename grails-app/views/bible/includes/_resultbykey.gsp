@@ -11,7 +11,7 @@
                   <span class="pgray">
 <div class="paginateButtons">
 <!--c:spaginate total="${total}" controller="bible" action="search" params='["":"${searchkk}"]' /-->
-<g:paginate total="${total}" controller="bible" action="search" params='["vk":"${searchkk}"]' />
+<g:paginate total="${total}" controller="bible" action="search" params='["vk":"${searchkk}"]'  max="1" maxsteps="1" />
 
 </div>
                      

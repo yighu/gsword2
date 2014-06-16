@@ -30,7 +30,6 @@ import org.apache.poi.hslf.model.TextBox
 import org.apache.poi.hslf.usermodel.RichTextRun
 import org.springframework.web.context.request.RequestContextHolder
 import javax.servlet.http.HttpSession;
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class GbookController {
   private static final String BIBLE_PROTOCOL = "bible";                                     //$NON-NLS-1$
@@ -46,6 +45,7 @@ class GbookController {
   private static final String XREF= "XRef"; //$NON-NLS-1$
   def jswordService
   def languageService
+  def grailsApplication
   //def scaffold = Gbook
   def index = {
     redirect(action: "v")
@@ -193,7 +193,7 @@ private convertNonAscii(String s) {
     List books = Books.installed().getBooks(BookFilters.getGeneralBooks())
     List dropdowntoc= new ArrayList()
 	dropdowntoc.addAll(genToc_dropdown(layers[0]))
-    render(view: 'generalbooks', model: [books: books, txt: result, toc: toc,gendropdowntoc:dropdowntoc])
+    render(view: 'generalbooks', model: [books: books, txt: result, toc: toc,gendropdowntoc:dropdowntoc,metadesc:toc])
 
   }
   def gentxtremote = {
@@ -237,7 +237,7 @@ private convertNonAscii(String s) {
         if (c.name == layers[i]) {
           k = c
         } else {
-          println c.name + " is not " + layers[i]
+          //println c.name + " is not " + layers[i]
         }
 
       }
@@ -284,7 +284,7 @@ private convertNonAscii(String s) {
     List books = Books.installed().getBooks(BookFilters.getGeneralBooks())
     List dropdowntoc= new ArrayList()
 	dropdowntoc.addAll(genToc_dropdown(params.id))
-    render(view: 'generalbooks', model: [books: books, txt: result, toc: rst,gendropdowntoc:dropdowntoc])
+    render(view: 'generalbooks', model: [books: books, txt: result, toc: rst,gendropdowntoc:dropdowntoc,metadesc:rst])
 
   }
   def language_change = {
@@ -341,8 +341,7 @@ private static pray
 
 def ix=params.id
 if(!ix)ix="1"
-def config = ConfigurationHolder.config
-if (!pray) pray=new XmlSlurper().parse(new File(config.prayerroot.toString()+"/praybible_zh.xml"))
+if (!pray) pray=new XmlSlurper().parse(new File(grailsApplication.config.prayerroot.toString()+"/praybible_zh.xml"))
 def cs=pray.c
 def catlist=pray.c.@z
 def cat= pray.c.findAll{it.@i.text()==ix}
@@ -370,7 +369,7 @@ cat.each{c->
 
 }
 
-    render(view: 'vp', model: [category:cat.@z.text(),prayers: prayers,catlist:catlist])
+    render(view: 'vp', model: [category:cat.@z.text(),prayers: prayers,catlist:catlist,metadesc:"Pray Scripture"])
 
 
   }
@@ -475,7 +474,7 @@ cat.each{c->
 //      devotions.each{
 //      println it.name
 //    }
-    render(view: 'searchresults', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions])
+    render(view: 'searchresults', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions,metadesc:key])
 
 
   }
@@ -521,13 +520,13 @@ cat.each{c->
 	try{
 	result = readStyledText(version, key, start, 200)
 	}catch (Exception e){
-println ("exception get ${version} ${key}	")
+		println ("exception get ${version} ${key}	")
 	}
-    def total
+    def total=0
 	try{
 	total= jswordService.getCardinality(version, key)
 	}catch (Exception e){
-println ("exception total get ${version} ${key}	")
+		println ("exception total get ${version} ${key}	")
 }
 
     List books = Books.installed().getBooks(BookFilters.getBibles());
@@ -544,7 +543,7 @@ println ("exception total get ${version} ${key}	")
     mainbooks.add("ChiNCVt")
     mainbooks.add("KJV")
     // mainbooks.add("ESV")
-    render(view: 'oneyearbible', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions])
+    render(view: 'oneyearbible', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions,metadesc:key])
   }
     def dailydevotions= {
 
@@ -590,7 +589,7 @@ println ("exception total get ${version} ${key}	")
 	}catch (Exception e){
 	println "exception in result: version:"+version +" key:"+key
 	}
-    def total
+    def total=0
 	try{
 	total= jswordService.getCardinality(version, key)
 	}catch (Exception e){
@@ -611,7 +610,7 @@ println ("exception total get ${version} ${key}	")
     mainbooks.add("ChiNCVt")
     mainbooks.add("KJV")
     // mainbooks.add("ESV")
-    render(view: 'daily', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions])
+    render(view: 'daily', model: [results: result, ref: key, version: version, total: total, mainbooks: mainbooks, books: books, dictionaries: dictionaries, commentaries: commentaries, bibles: bibles, chapters: chapters, devotions: devotions,metadesc:key])
   }
   def listkey = {
     //  println "dci="+ params
@@ -1086,6 +1085,7 @@ println ("exception total get ${version} ${key}	")
     def bookkey
     def keyword
     def keyvalue=""
+println "------------\n"+params+"\n----------------------"
     if (params.dic){
 
         bookkey = BookInstaller.getInstalledBook(params.dic)?.getGlobalKeyList();
@@ -1093,10 +1093,11 @@ println ("exception total get ${version} ${key}	")
          keyword=bookkey.get(Integer.parseInt(params.offset)).getName()
         // println "keyword:"+keyword
         // languageService.detect(keyword)
-         params.dic=languageService.therightdic(params.dic,keyword)
+	println "keyword:"+keyword
+        // params.dic=languageService.therightdic(params.dic,keyword)
          //printlnb "dic:"+params.dic
          //keyvalue = jswordService.getOSISString(params.dic, keyword, 0, 10)
-    	 keyvalue= readStyledText(params.dic, keyword, 0, 10)
+    	 keyvalue= readStyledText(params.dic, keyword, 0, 1)
        }
 
     }
@@ -1155,7 +1156,7 @@ println ("exception total get ${version} ${key}	")
 
   def diclook = {
     List dictionaries = Books.installed().getBooks(BookFilters.getDictionaries());
-    render(view: 'diclook', model: [dictionaries: dictionaries])
+    render(view: 'diclook', model: [dictionaries: dictionaries,metadesc:" Bible Dictionary"])
 
   }
 
@@ -1728,9 +1729,9 @@ println "in readstyledtext:"+bookInitials+" "+key
     //def link=""
     //def description=""
     render(feedType: "rss", feedVersion: "2.0") {
-      title = "GSword Daily Devotion"
-      link = "http://rock.ccim.org/gsword/gbook/feed"
-      description = "GSword Daily Devotion"
+       title = "GSword Daily Devotion"
+       link = "http://rock.ccim.org/gsword/gbook/feed"
+       description = "GSword Daily Devotion"
       entry("Streams in the Desert") {
         title = "Streams in the Desert"
         link = "http://rock.ccim.org/gsword/gbook/v"

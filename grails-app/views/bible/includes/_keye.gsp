@@ -10,7 +10,7 @@
   <div style="padding: 10px"><div style="background:#DFDDD1;font-weight: bold; padding:10px">
                   <span class="pgray">
 <div class="paginateButtons">   English Keys
-<g:paginate total="${totalkeye}" controller="bible" action="search" params='["vk":"kjv"]' maxsteps="10" max="10"/>
+<g:paginate total="${totalkeye}" controller="bible" action="search" params='["vk":"kjv"]' maxsteps="1" max="1"/>
 </div>
                      
                   </span>

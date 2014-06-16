@@ -19,6 +19,6 @@ readFile('/thecharacteriwanttocultivate/s'+rand.nextInt(370+1)+'.txt'),
 readFile('/thecharacteriwanttocultivate/s'+rand.nextInt(370+1)+'.txt'),
 readFile('/myrelationshiptoothers/s'+rand.nextInt(203+1)+'.txt'),
 readFile('/myrelationshiptoothers/s'+rand.nextInt(203+1)+'.txt')]
-render (view:'index',model:[verses:data])
+render (view:'index',model:[verses:data,metadesc:"Pray Scripture His Word God Spiritual Growth"])
  }
 }

@@ -16,5 +16,5 @@
 
 <br/>
       <div id="liveform">
-      ${results}
+      ${results?.encodeAsRaw()}
       </div>

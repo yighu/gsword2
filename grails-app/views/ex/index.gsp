@@ -20,22 +20,18 @@
 <g:javascript library="application" />
 </head>
 <body>
-<center>
-<div id="prayer_root"> 
-<g:each status="i" var="cat" in="${catlist}">
-<g:link action="vp" id="${i}" >-${cat}-</g:link>
-</g:each>
-<div>尽情大声的祷告吧!</div>
-</center>
-<g:each var="subc" in="${prayers}">
-  <div><br/><center><h1>${subc.name?.trim()}</h1></center><br/></div>
- <g:each var="prays" in="${subc.prays}">
- <div><br/><center><h2>${prays.name?.trim()}</h2></center><br/></div>
- <div>${prays.txt?.encodeAsRaw()}</div>
- </g:each>
-</g:each>
-</div>
 
+<div id="prayer_root"> </div>
+<br/>
+<br/>
+<br/>
+<a href="/gsword/ex/spiritandhealth.htm">心靈與健康 嚴惠來編</a><br>
+<br/>
+<a href="/gsword/ex/genesisintrobyyanhuilai.pdf"> 创世记导读与问题解答 嚴惠來</a><br>
+<br/>
+<a href="/gsword/ex/RevelationIntrobyYanhuilai.pdf"> 啓示錄導讀與問題解答 嚴惠來</a><br>
+
+</div>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
