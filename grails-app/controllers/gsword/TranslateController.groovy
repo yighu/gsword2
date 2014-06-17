@@ -1,5 +1,4 @@
 package gsword
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import java.util.Random
 import java.text.SimpleDateFormat
 import java.io.*;
@@ -30,18 +29,18 @@ class TranslateController {
 
   def xslurl = ResourceUtil.getResource("iBD_noref.xsl");
     	def jswordService
-def config = ConfigurationHolder.config
+	def grailsApplication
 
 def upload= {
       def f = request.getFile('upfile')
       //def fnames=request.getFileNames()
 	def rand=new Random()
           if(!f.empty) {
-	      def file=new File(config.transdoc.toString() +"/source${rand.nextInt(99999)}.txt")
+	      def file=new File(grailsApplication.config.transdoc.toString() +"/source${rand.nextInt(99999)}.txt")
               f.transferTo( file )
 	def bv=request.getParameter('bv')
 	translateBible(file.absolutePath,file.absolutePath+".${bv}","${bv}")
-	render(view: 'index', model: [fl:file.name+".${bv}"])
+	render(view: 'index', model: [fl:file.name+".${bv}",metadesc:"Pray Scripture His Word"])
           }
           else {
               flash.message = 'file cannot be empty'
@@ -168,13 +167,13 @@ private findVersion(List books, String version) {
                def ref = bok.key + " " + chap + ":" + ver
 
                def searchresult = searchByRef(versionobj.initials, ref)// "dis this verse " + ver
-               render(view: "readgen", model: [books: books, book: versionobj,layer:layer, bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data")]) //for one chapter
+               render(view: "readgen", model: [books: books, book: versionobj,layer:layer, bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
              } else {
                def ref = bok.key + " " + chap
                def searchresult = searchByRef(versionobj.initials, ref)// "dis this verse " + ver
 
-               render(view: "readgen", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data")]) //for one chapter
+               render(view: "readgen", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
              }
 
@@ -182,13 +181,13 @@ private findVersion(List books, String version) {
              def ref =  "1"
              def searchresult = searchByRef(bok.getName(), ref)// "dis this verse " + ver
             // println  searchresult
-             render(view: "readgen", model: [books: books, book: bok, layer:layer,bibles: bibles, bible: bok, chapters: chapters, txt: searchresult.get("data")]) //for one chapter
+             render(view: "readgen", model: [books: books, book: bok, layer:layer,bibles: bibles, bible: bok, chapters: chapters, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
            }
          } else {
            def ref = "1"
            def searchresult = searchByRef("Institutes", ref)// "dis this verse " + ver
-           render(view: "readgen", model: [books: books, book: "Institutes", layer:layer,bibles: bibles, txt: searchresult.get("data")])   //  one version
+           render(view: "readgen", model: [books: books, book: "Institutes", layer:layer,bibles: bibles, txt: searchresult.get("data"),metadesc:ref])   //  one version
          }
 
 
@@ -306,37 +305,37 @@ private findVersion(List books, String version) {
             def ref = bok?.key + " " + chap + ":" + ver
 
             def searchresult = searchByRef(B4C+versionobj?.initials ?: "MHCC", ref)// "dis this verse " + ver
-            render(view: "readcmnt", model: [books: books, book: versionobj,layer:layer, bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data")]) //for one chapter
+            render(view: "readcmnt", model: [books: books, book: versionobj,layer:layer, bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
           } else {
             def ref = bok.key + " " + chap
             def searchresult = searchByRef(B4C+versionobj.initials, ref)// "dis this verse " + ver
 
-            render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data")]) //for one chapter
+            render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, chap: chap, verses: verses, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
           }
 
         } else {
           def ref = bok.key +" 1"
           def searchresult = searchByRef(B4C+versionobj.initials, ref)// "dis this verse " + ver
-          render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, txt: searchresult.get("data")]) //for one chapter
+          render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, bible: bok, chapters: chapters, txt: searchresult.get("data"),metadesc:ref]) //for one chapter
 
         }
       } else {
         def ref = " John 1"
         def searchresult = searchByRef(B4C+versionobj?.initials, ref)// "dis this verse " + ver
-        render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, txt: searchresult.get("data")])   //  one version
+        render(view: "readcmnt", model: [books: books, book: versionobj, layer:layer,bibles: bibles, txt: searchresult.get("data"),metadesc:ref])   //  one version
       }
     } else {
       def ref = "Gen John 1"
       def searchresult = searchByRef(B4C+"MHCC", ref)// "dis this verse " + ver
-      render(view: "readcmnt", model: [books: books, layer:layer,txt: searchresult.get("data")])            //all versions
+      render(view: "readcmnt", model: [books: books, layer:layer,txt: searchresult.get("data"),metadesc:ref])            //all versions
     }
   }
    def dics= {
     List books = Books.installed().getBooks(BookFilters.getDictionaries());
     def data= jswordService.getOSISString(params.dic, params.key, 0, 10)
-    render(view: "readdics", model: [books: books,txt: data])
+    render(view: "readdics", model: [books: books,txt: data,metadesc:ref])
   }
   def B4C="ChiUns,KJV,"
 
@@ -409,7 +408,7 @@ private findVersion(List books, String version) {
     def tt=searchresult.get("total")
 	def searchkk=version
 	if(keyid>=0)searchkk=version+"-"+keyid
-    render(view: "search", model: [bibleversion: version, keyword:key, totalkeycs:bibleindexService.chiunskeysize(),totalkeye:bibleindexService.kjvkeysize(),totalkeyc:bibleindexService.chiunkeysize(),total:tt,txt: searchresult.get("data"),searchkk:searchkk]) //for one chapter
+    render(view: "search", model: [bibleversion: version, keyword:key, totalkeycs:bibleindexService.chiunskeysize(),totalkeye:bibleindexService.kjvkeysize(),totalkeyc:bibleindexService.chiunkeysize(),total:tt,txt: searchresult.get("data"),searchkk:searchkk,metadesc:(key+" "+searchkk)]) //for one chapter
 
   }
    def seek = {
@@ -434,7 +433,7 @@ private findVersion(List books, String version) {
 	//println "search result:"+searchresult.get("data")
     def keyindex=retrivekeyindex(version, key)
 	def searchkk=version+"-"+keyindex
-    render(view: "search", model: [bibleversion: version, keyword:key, totalkeye:ke.cardinality?:10000,totalkeyc:kc.cardinality?:3000,total:searchresult.get("total")?:10,txt: searchresult.get("data"),searchkk:searchkk]) //for one chapter
+    render(view: "search", model: [bibleversion: version, keyword:key, totalkeye:ke.cardinality?:10000,totalkeyc:kc.cardinality?:3000,total:searchresult.get("total")?:10,txt: searchresult.get("data"),searchkk:searchkk,metadesc:(key+" "+searchkk)]) //for one chapter
 
   }
   def v = {
